@@ -1,0 +1,9 @@
+/Users/persephone/Desktop/CS 510 Embedded Rust/Drop/target/thumbv7em-none-eabihf/debug/deps/libtiny_led_matrix-d56db3711d9589ec.rmeta: /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tiny-led-matrix-1.0.2/src/lib.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tiny-led-matrix-1.0.2/src/control.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tiny-led-matrix-1.0.2/src/display.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tiny-led-matrix-1.0.2/src/timer.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tiny-led-matrix-1.0.2/src/render.rs
+
+/Users/persephone/Desktop/CS 510 Embedded Rust/Drop/target/thumbv7em-none-eabihf/debug/deps/tiny_led_matrix-d56db3711d9589ec.d: /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tiny-led-matrix-1.0.2/src/lib.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tiny-led-matrix-1.0.2/src/control.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tiny-led-matrix-1.0.2/src/display.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tiny-led-matrix-1.0.2/src/timer.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tiny-led-matrix-1.0.2/src/render.rs
+
+/Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tiny-led-matrix-1.0.2/src/lib.rs:
+/Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tiny-led-matrix-1.0.2/src/control.rs:
+/Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tiny-led-matrix-1.0.2/src/display.rs:
+/Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tiny-led-matrix-1.0.2/src/timer.rs:
+/Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tiny-led-matrix-1.0.2/src/render.rs:

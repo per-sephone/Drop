@@ -1,0 +1,11 @@
+/Users/persephone/Desktop/CS 510 Embedded Rust/Drop/target/thumbv7em-none-eabihf/debug/deps/libhalf-f77803076d3785fe.rmeta: /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/lib.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/bfloat.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/bfloat/convert.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/binary16.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/binary16/arch.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/leading_zeros.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/slice.rs
+
+/Users/persephone/Desktop/CS 510 Embedded Rust/Drop/target/thumbv7em-none-eabihf/debug/deps/half-f77803076d3785fe.d: /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/lib.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/bfloat.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/bfloat/convert.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/binary16.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/binary16/arch.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/leading_zeros.rs /Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/slice.rs
+
+/Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/lib.rs:
+/Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/bfloat.rs:
+/Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/bfloat/convert.rs:
+/Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/binary16.rs:
+/Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/binary16/arch.rs:
+/Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/leading_zeros.rs:
+/Users/persephone/.cargo/registry/src/index.crates.io-6f17d22bba15001f/half-2.3.1/src/slice.rs:
