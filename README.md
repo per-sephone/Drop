@@ -1,18 +1,16 @@
-# mb2-template: MicroBit 2 Rust embedded project template
+# Drop by Nora Luna
 
-To use this [Github template
-repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template):
+I started off this project with the class template which is very useful since it contains all the basic crates and basic set up required for embedded software. This makes the set up process very easy. 
 
-1. Follow the instructions linked above to make a Github repo
-   for your project.
-   
-2. If needed, do the following to set up your tools:
+The first portion of the assignment I worked on was setting up a skeleton for the project. This was basically deciding what functions I would have and where they would go in the main program. This skeleton is what helped me develop the program incrementally.
+```
+loop {
+   display_a_single_dot(&mut image);
+   while board_is_falling() {
+      yell();
+      show_exclaimation(&mut image);
+   }
+}
+```
 
-      rustup target add thumbv7em-none-eabihf
-      rustup component add llvm-tools
-      cargo install cargo-binutils
-      cargo install probe-rs --features cli
-
-3. Edit this `README.md`, the `Cargo.toml` and the stuff in
-   `src/` to get the names right and the template to what
-   you need.
+Once I had this skeleton, I started in main grabbing all the needed peripherals. I used the {greyscale}(https://github.com/pdx-cs-rust-embedded/mb2-grayscale/blob/main/src/main.rs) repository as a guide for setting up a nonblocking display. I started out with developing the single dot which is what is displayed when the microbit is not falling. Once I had that working, I implemented the display for an exclamation point, which is what is displayed when the microbit is falling.
