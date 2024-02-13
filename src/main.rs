@@ -3,18 +3,14 @@
 
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
-
 use cortex_m_rt::entry;
 use microbit::{
     board::Board,
     display::nonblocking::{Display, GreyscaleImage},
     hal::{
-        pac::{self, interrupt, TIMER1},
-        prelude::*,
-        timer::Timer,
+        delay::Delay, gpio::{p0::P0_00, Level, Output, PushPull}, pac::{self, interrupt, TIMER1}, prelude::*, timer::Timer
     },
 };
-
 use critical_section_lock_mut::LockMut;
 
 fn display_a_single_dot(image: &mut [[u8; 5]; 5]) {
@@ -32,7 +28,13 @@ fn display_a_single_dot(image: &mut [[u8; 5]; 5]) {
     DISPLAY.with_lock(|display| display.show(&led_display));
 }
 fn board_is_falling() -> bool {true}
-fn yell() {}
+
+fn yell(speaker: &mut P0_00<Output<PushPull>>, delay: &mut Delay) {
+    speaker.set_high().unwrap();
+    delay.delay_us(500u16);
+    speaker.set_low().unwrap();
+    delay.delay_us(500u16);
+}
 
 fn show_exclaimation(image: &mut [[u8; 5]; 5]) {
     for (row, row_array) in image.iter_mut().enumerate().take(5) {
@@ -55,6 +57,10 @@ fn main() -> ! {
     let mut board = Board::take().unwrap();
     let display = Display::new(board.TIMER1, board.display_pins);
     DISPLAY.init(display);
+
+    let mut delay = Delay::new(board.SYST);
+    let mut speaker = board.speaker_pin.into_push_pull_output(Level::Low);
+
     //let mut timer = Timer::new(board.TIMER0);
     unsafe {
         board.NVIC.set_priority(pac::Interrupt::TIMER1, 128);
@@ -65,7 +71,7 @@ fn main() -> ! {
     loop {
         display_a_single_dot(&mut image);
         while board_is_falling() {
-        //    yell();
+            yell(&mut speaker, &mut delay);
             show_exclaimation(&mut image);
         }
     }
