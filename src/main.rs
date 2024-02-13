@@ -19,7 +19,7 @@ use critical_section_lock_mut::LockMut;
 
 fn display_a_single_dot(image: &mut [[u8; 5]; 5]) {
     image[2][2] = 9;
-    let led_display = GreyscaleImage::new(&image);
+    let led_display = GreyscaleImage::new(image);
     DISPLAY.with_lock(|display| display.show(&led_display))
 }
 fn board_is_falling() -> bool {true}
@@ -34,7 +34,7 @@ fn main() -> ! {
     let mut board = Board::take().unwrap();
     let display = Display::new(board.TIMER1, board.display_pins);
     DISPLAY.init(display);
-    let mut timer = Timer::new(board.TIMER0);
+    //let mut timer = Timer::new(board.TIMER0);
     unsafe {
         board.NVIC.set_priority(pac::Interrupt::TIMER1, 128);
         pac::NVIC::unmask(pac::Interrupt::TIMER1);
