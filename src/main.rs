@@ -18,13 +18,34 @@ use microbit::{
 use critical_section_lock_mut::LockMut;
 
 fn display_a_single_dot(image: &mut [[u8; 5]; 5]) {
-    image[2][2] = 9;
+    //set each element in the led array here
+    for (row, row_array) in image.iter_mut().enumerate().take(5) {
+        for (col, col_value) in row_array.iter_mut().enumerate().take(5) {
+            *col_value = match (row, col) {
+                (2, 2) => 9,
+                _ => 0,
+            };
+        }
+    }
+    //turn into a GreyscaleImage for displaying
     let led_display = GreyscaleImage::new(image);
-    DISPLAY.with_lock(|display| display.show(&led_display))
+    DISPLAY.with_lock(|display| display.show(&led_display));
 }
 fn board_is_falling() -> bool {true}
 fn yell() {}
-fn show_exclaimation() {}
+
+fn show_exclaimation(image: &mut [[u8; 5]; 5]) {
+    for (row, row_array) in image.iter_mut().enumerate().take(5) {
+        for (col, col_value) in row_array.iter_mut().enumerate().take(5) {
+            *col_value = match (row, col) {
+                (0, 2) | (1, 2) | (2, 2) | (4, 2) => 9,
+                _ => 0,
+            };
+        }
+    }
+    let led_display = GreyscaleImage::new(image);
+    DISPLAY.with_lock(|display| display.show(&led_display));
+}
 
 static DISPLAY: LockMut<Display<TIMER1>> = LockMut::new();
 
@@ -43,10 +64,10 @@ fn main() -> ! {
 
     loop {
         display_a_single_dot(&mut image);
-        //while board_is_falling() {
+        while board_is_falling() {
         //    yell();
-        //    show_exclaimation();
-        //}
+            show_exclaimation(&mut image);
+        }
     }
 }
 

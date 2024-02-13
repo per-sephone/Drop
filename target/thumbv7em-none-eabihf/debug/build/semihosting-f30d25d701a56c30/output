@@ -1,0 +1,7 @@
+cargo:rerun-if-changed=build.rs
+cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+cargo:rerun-if-env-changed=RUSTFLAGS
+cargo:rerun-if-env-changed=CARGO_BUILD_RUSTFLAGS
+cargo:rerun-if-env-changed=CARGO_TARGET_THUMBV7EM_NONE_EABIHF_RUSTFLAGS
+cargo:rustc-cfg=semihosting_target_feature="thumb-mode"
+cargo:rustc-cfg=semihosting_target_feature="mclass"
