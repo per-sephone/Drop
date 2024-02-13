@@ -7,6 +7,9 @@ edition = "2021"
 cortex-m-rt = "0.7"
 microbit-v2 = "0.13.0"
 rtt-target = "0.4"
+lsm303agr = "0.3.0"
+embedded-hal = "0.2.7"
+nb = "1.1.0"
 
 [dependencies.panic-rtt-target]
 version = "0.1"

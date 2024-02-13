@@ -3,22 +3,25 @@
 
 use cortex_m_rt::entry;
 use critical_section_lock_mut::LockMut;
+use lsm303agr::{interface::I2cInterface, mode::MagOneShot, Lsm303agr};
 use microbit::{
     board::Board,
     display::nonblocking::{Display, GreyscaleImage},
     hal::{
         delay::Delay,
         gpio::{p0::P0_00, Level, Output, PushPull},
-        pac::{self, interrupt, TIMER1},
+        pac::{self, interrupt, TIMER1, TWIM0},
         prelude::*,
+        twim, Timer, Twim,
     },
+    pac::twim0::frequency::FREQUENCY_A,
 };
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
 
 /// Displays a single dot in the center of the LED screen.
 /// This is default for when the microbit is not falling.
-/// Iterates through the 5x5 array representing the image 
+/// Iterates through the 5x5 array representing the image
 /// displayed on the LED screen and sets the center bit to 9
 /// (the brightest) and all others to 0.
 /// Creates a GreyscaleImage with the given 2D array,
@@ -43,14 +46,25 @@ fn display_a_single_dot(image: &mut [[u8; 5]; 5]) {
     let led_display = GreyscaleImage::new(image);
     DISPLAY.with_lock(|display| display.show(&led_display));
 }
-fn board_is_falling() -> bool {
-    true
+
+
+fn board_is_falling(accel: &mut Lsm303agr<I2cInterface<Twim<TWIM0>>, MagOneShot>) -> bool {
+    if accel.accel_status().unwrap().xyz_new_data() {
+        let data = accel.acceleration().unwrap();
+        let x = (data.x_mg()/1000) as f32;
+        let y = (data.y_mg()/1000) as f32;
+        let z = (data.z_mg()/1000) as f32;
+        rprintln!("acc: {} {} {}", x, y, z);
+        rprintln!("{}",((x * x) + (y * y) + (z * z)));
+        return 0.25 < ((x * x) + (y * y) + (z * z))
+    }
+    false
 }
 
 /// Makes the speaker emit a 1Khz square wave.
 /// This happens in tandem with the display showing
 /// an exclaimation.
-/// It toggles the speaker pin between high and low voltage levels 
+/// It toggles the speaker pin between high and low voltage levels
 /// with a delay in between to produce the pitch.
 /// # Arguments
 ///
@@ -71,7 +85,7 @@ fn yell(speaker: &mut P0_00<Output<PushPull>>, delay: &mut Delay) {
 
 /// Displays an exclaimation in the center of the LED screen.
 /// This is the image shown when the microbit is falling.
-/// Iterates through the 5x5 array representing the image 
+/// Iterates through the 5x5 array representing the image
 /// displayed on the LED screen and sets the exclaimation point
 /// image LEDs to 9 (the brightest) and all others to 0.
 /// Creates a GreyscaleImage with the given 2D array,
@@ -108,21 +122,37 @@ static DISPLAY: LockMut<Display<TIMER1>> = LockMut::new();
 fn main() -> ! {
     rtt_init_print!();
     let mut board = Board::take().unwrap();
+    //set up display
     let display = Display::new(board.TIMER1, board.display_pins);
     DISPLAY.init(display);
-
-    let mut delay = Delay::new(board.SYST);
-    let mut speaker = board.speaker_pin.into_push_pull_output(Level::Low);
-
     unsafe {
         board.NVIC.set_priority(pac::Interrupt::TIMER1, 128);
         pac::NVIC::unmask(pac::Interrupt::TIMER1);
     }
+    //set up speaker
+    let mut delay = Delay::new(board.SYST);
+    let mut speaker = board.speaker_pin.into_push_pull_output(Level::Low);
+    //set up accelerometer
+    let i2c = twim::Twim::new(board.TWIM0, board.i2c_internal.into(), FREQUENCY_A::K100);
+    let mut timer = Timer::new(board.TIMER0);
+    let mut lsm303 = Lsm303agr::new_with_i2c(i2c);
+    lsm303.init().unwrap();
+    lsm303
+        .set_accel_mode_and_odr(
+            &mut timer,
+            lsm303agr::AccelMode::Normal,
+            lsm303agr::AccelOutputDataRate::Hz100,
+        )
+        .unwrap();
+    //timer.delay(1000u32);
+
     let mut image = [[0; 5]; 5];
 
     loop {
-        display_a_single_dot(&mut image);
-        while board_is_falling() {
+        while !board_is_falling(&mut lsm303) {
+            display_a_single_dot(&mut image);
+        }
+        while board_is_falling(&mut lsm303) {
             yell(&mut speaker, &mut delay);
             show_exclaimation(&mut image);
         }
