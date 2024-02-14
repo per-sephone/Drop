@@ -14,7 +14,7 @@ use microbit::{
         prelude::*,
         twim, Timer, Twim,
     },
-    pac::twim0::frequency::FREQUENCY_A,
+    pac::{twim0::frequency::FREQUENCY_A, TIMER2},
 };
 use panic_rtt_target as _;
 use rtt_target::{rprintln, rtt_init_print};
@@ -47,16 +47,15 @@ fn display_a_single_dot(image: &mut [[u8; 5]; 5]) {
     DISPLAY.with_lock(|display| display.show(&led_display));
 }
 
-
 fn board_is_falling(accel: &mut Lsm303agr<I2cInterface<Twim<TWIM0>>, MagOneShot>) -> bool {
     if accel.accel_status().unwrap().xyz_new_data() {
         let data = accel.acceleration().unwrap();
-        let x = (data.x_mg()/1000) as f32;
-        let y = (data.y_mg()/1000) as f32;
-        let z = (data.z_mg()/1000) as f32;
-        rprintln!("acc: {} {} {}", x, y, z);
-        rprintln!("{}",((x * x) + (y * y) + (z * z)));
-        return 0.25 < ((x * x) + (y * y) + (z * z))
+        let x = (data.x_mg() / 1000) as f32;
+        let y = (data.y_mg() / 1000) as f32;
+        let z = (data.z_mg() / 1000) as f32;
+        //rprintln!("acc: {} {} {}", x, y, z);
+        rprintln!("{}", ((x * x) + (y * y) + (z * z)));
+        return 0.25 < ((x * x) + (y * y) + (z * z));
     }
     false
 }
@@ -77,10 +76,13 @@ fn board_is_falling(accel: &mut Lsm303agr<I2cInterface<Twim<TWIM0>>, MagOneShot>
 ///
 /// This function may panic if it fails to set the speaker pin to a high or low state.
 fn yell(speaker: &mut P0_00<Output<PushPull>>, delay: &mut Delay) {
-    speaker.set_high().unwrap();
-    delay.delay_us(500u16);
-    speaker.set_low().unwrap();
-    delay.delay_us(500u16);
+    let duration:u16 = 1000;
+    for _ in 0..duration {
+        speaker.set_high().unwrap();
+        delay.delay_us(500u16);
+        speaker.set_low().unwrap();
+        delay.delay_us(500u16);
+    }
 }
 
 /// Displays an exclaimation in the center of the LED screen.
@@ -98,7 +100,7 @@ fn yell(speaker: &mut P0_00<Output<PushPull>>, delay: &mut Delay) {
 /// # Panics
 ///
 /// This function panics if it fails to acquire a lock on the display.
-fn show_exclaimation(image: &mut [[u8; 5]; 5]) {
+fn show_exclaimation(image: &mut [[u8; 5]; 5], timer: &mut Timer<TIMER2>) {
     for (row, row_array) in image.iter_mut().enumerate().take(5) {
         for (col, col_value) in row_array.iter_mut().enumerate().take(5) {
             *col_value = match (row, col) {
@@ -109,6 +111,7 @@ fn show_exclaimation(image: &mut [[u8; 5]; 5]) {
     }
     let led_display = GreyscaleImage::new(image);
     DISPLAY.with_lock(|display| display.show(&led_display));
+    timer.delay_ms(1000u32);
 }
 
 static DISPLAY: LockMut<Display<TIMER1>> = LockMut::new();
@@ -125,6 +128,7 @@ fn main() -> ! {
     //set up display
     let display = Display::new(board.TIMER1, board.display_pins);
     DISPLAY.init(display);
+    let mut timer2 = Timer::new(board.TIMER2);
     unsafe {
         board.NVIC.set_priority(pac::Interrupt::TIMER1, 128);
         pac::NVIC::unmask(pac::Interrupt::TIMER1);
@@ -141,20 +145,19 @@ fn main() -> ! {
         .set_accel_mode_and_odr(
             &mut timer,
             lsm303agr::AccelMode::Normal,
-            lsm303agr::AccelOutputDataRate::Hz100,
+            lsm303agr::AccelOutputDataRate::Hz50,
         )
         .unwrap();
-    //timer.delay(1000u32);
+
 
     let mut image = [[0; 5]; 5];
 
     loop {
-        while !board_is_falling(&mut lsm303) {
-            display_a_single_dot(&mut image);
-        }
-        while board_is_falling(&mut lsm303) {
+        display_a_single_dot(&mut image);
+        if board_is_falling(&mut lsm303) {
+            show_exclaimation(&mut image, &mut timer2);
             yell(&mut speaker, &mut delay);
-            show_exclaimation(&mut image);
+            timer.delay(1000u32);
         }
     }
 }
