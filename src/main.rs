@@ -47,17 +47,16 @@ fn display_a_single_dot(image: &mut [[u8; 5]; 5]) {
     DISPLAY.with_lock(|display| display.show(&led_display));
 }
 
-
-/// Determines if the microbit is falling. 
+/// Determines if the microbit is falling.
 /// Checks the acceleration status and retrieves the data.
 /// Inputs the x,y,z data into the Cartesian magnitude of acceleration formula.
-/// 
+///
 /// # Arguments
-/// 
+///
 /// * accel - A mutable reference to a lsm303agr instance.
-/// 
+///
 /// # Returns
-/// 
+///
 /// * true if the board is falling, otherwise false.
 fn board_is_falling(accel: &mut Lsm303agr<I2cInterface<Twim<TWIM0>>, MagOneShot>) -> bool {
     if accel.accel_status().unwrap().xyz_new_data() {
@@ -87,7 +86,7 @@ fn board_is_falling(accel: &mut Lsm303agr<I2cInterface<Twim<TWIM0>>, MagOneShot>
 ///
 /// This function may panic if it fails to set the speaker pin to a high or low state.
 fn yell(speaker: &mut P0_00<Output<PushPull>>, delay: &mut Delay) {
-    let duration:u16 = 200;
+    let duration: u16 = 200;
     for _ in 0..duration {
         speaker.set_high().unwrap();
         delay.delay_us(500u16);
@@ -159,7 +158,6 @@ fn main() -> ! {
             lsm303agr::AccelOutputDataRate::Hz50,
         )
         .unwrap();
-
 
     let mut image = [[0; 5]; 5];
 
