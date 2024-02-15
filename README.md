@@ -21,7 +21,7 @@ Lastly, I developed the accelerometer functionality. I primarily used the code f
 
 After I had developed each part, I noticed that the microbit was not behaving how I expected with all the pieces combined together. The first problem was the exclaimation point was not lighting up upon dropping. I determined the issue was that I was not passing in a timer that would show the exclaimation for a certain period of time. This was actually vital in being able to see the exclaimation point. The other issue was that there was only a slight sound emitting from the microbit. Upon further exploration I realized it was a similar issue. I needed to emit the sound for a certain time period in order to actually hear a continuous sound. Understanding how important timers are for embedded programming really helped my understanding of the project. 
 
-One note is that this program seems quite sensitive to being "dropped", even small movements will trigger the dropping functionality.
+One note is that this program seems quite sensitive to being "dropped", even small movements will trigger the dropping functionality. I double checked my `board_is_falling()` function and the calculations for Cartesian Magnitude seem to be correct.
 
 ### Testing
-I did attempt to set up the embedded-test crate for unit testing, but I could not get one of the dependecy crates to download correctly onto my system. It seems like an issue on the developer side of things. Instead I tested each piece incrementally as I developed it on the microbit to make sure it was working. 
+I did attempt to set up the `embedded-test` crate for unit testing, but I could not get one of the dependecy crates to download correctly onto my system. It seems like an issue on the developer side of things. Instead I tested each piece incrementally as I developed it on the microbit to make sure it was working. 

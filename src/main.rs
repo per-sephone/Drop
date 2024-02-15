@@ -65,7 +65,6 @@ fn board_is_falling(accel: &mut Lsm303agr<I2cInterface<Twim<TWIM0>>, MagOneShot>
         let x = (data.x_mg() / 1000) as f32;
         let y = (data.y_mg() / 1000) as f32;
         let z = (data.z_mg() / 1000) as f32;
-        //rprintln!("acc: {} {} {}", x, y, z);
         rprintln!("{}", ((x * x) + (y * y) + (z * z)));
         return 0.25 < ((x * x) + (y * y) + (z * z));
     }
